@@ -16,15 +16,16 @@
                     </h5>
                 </v-card-title>
             </div>
-
             <v-avatar class="ma-3" :size="$vuetify.display.smAndUp ? '200':'100'" rounded="0">
                 <v-img :src="profileImg" cover ></v-img>
             </v-avatar>
-        </div>
-        <v-divider class="ma-3"></v-divider>
+        </div>        
+        <pinkdivider/>
         <v-row class="d-flex mt-3 d-flex flex-row-reverse ">
-            <v-col :cols="$vuetify.display.smAndUp ? '6' : '12'">
-                <h2 class="text-right mb-4 text-decoration-underline">قائمة الدروس</h2>
+            <v-col  :cols="$vuetify.display.mdAndUp ? '6' : '12'">
+                <h2 class="text-center mb-5">دروس مسجلة
+                    <v-icon icon="mdi-monitor-account" class="ml-2" size="large"></v-icon>
+                </h2>
                 <v-card v-for="(course, index) in courses" :key="course.id" class="mb-2" :to="{
                     name: 'Course',
                     params: { courseId: course.id },
@@ -42,8 +43,10 @@
                     </v-card-text>
                 </v-card>
             </v-col>
-            <v-col :cols="$vuetify.display.smAndUp ? '6' : '12'">
-                <h2 class="text-right mb-4 text-decoration-underline">أقسام عن بعد</h2>
+            <v-col  :cols="$vuetify.display.mdAndUp ? '6' : '12'">
+                <h2 class="text-center mb-5">أقسام عن بعد
+                    <v-icon icon="mdi-google-classroom" class="ml-2"  size="large"></v-icon>
+                </h2>
                 <v-card class="mx-auto" elevation="2">
                     <v-card-item>
                         <div>
@@ -81,6 +84,8 @@
 import { useDisplay } from "vuetify";
 import axios from "axios";
 
+import pinkdivider from '../components/pinkdivider.vue'
+
 export default {
     name: 'Profile',
 
@@ -89,6 +94,7 @@ export default {
     },
 
     components: {
+        pinkdivider
     },
 
     data() {
@@ -107,7 +113,6 @@ export default {
         axios
             .get(`/user/get/${this.userId}`)
             .then((response) => {
-                console.log(response.data)
                 this.teacherName = response.data.username
                 this.profileImg = response.data.profile_img
                 this.courses = response.data.courses

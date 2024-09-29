@@ -4,7 +4,7 @@
       <router-link class="text-decoration-none" :to="{
         name: 'home',
       }">
-        <v-img aspect-ratio="16/9" width="180" :src="logo"></v-img>
+        <v-img aspect-ratio="16/9" width="150" :src="logo"></v-img>
       </router-link>
     </template>
 

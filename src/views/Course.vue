@@ -12,11 +12,11 @@
                 </h4>
             </router-link>
 
-            <h2 class="text-left" color="#ff0090">
-                {{ this.courseTitle }}
-            </h2>
-
         </div>
+
+        <h2 class="text-left" color="#ff0090">
+            {{ this.courseTitle }}
+        </h2>
         <v-row class="d-flex mt-3">
             <v-col :cols="$vuetify.display.smAndUp ? '8' : '12'">
                 <v-card elevation="0">
@@ -24,8 +24,8 @@
                         <h2>{{ currentChapter.title }}</h2>
                     </v-card-text>
                     <v-card-text class="ma-1">
-                        <mux-player id="videoPlayer" :playback-id=currentChapter.videosrc metadata-video-title="Test VOD"
-                            metadata-viewer-user-id="user-id-007" autoplay></mux-player>
+                        <mux-player id="videoPlayer" :playback-id=currentChapter.videosrc
+                            metadata-video-title="Test VOD" metadata-viewer-user-id="user-id-007" autoplay></mux-player>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -44,8 +44,8 @@
                                 <v-icon icon="mdi-play" size="large"></v-icon>
                             </v-btn>
                             <div>
-                                <v-card-title class="text-h6">
-                                    {{ chapter.title }}
+                                <v-card-title >
+                                    <h5 class="wrap-text">{{ chapter.title }}</h5>
                                 </v-card-title>
                             </div>
                         </div>
@@ -112,4 +112,9 @@ export default {
 
 }
 </script>
-<style></style>
+<style scoped>
+.wrap-text {
+  word-wrap: break-word; /* Wrap long words */
+  white-space: normal; /* Allow text to wrap */
+}
+</style>
