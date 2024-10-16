@@ -7,8 +7,11 @@
         <v-img aspect-ratio="16/9" width="150" :src="logo"></v-img>
       </router-link>
     </template>
-
-    <!-- <template v-slot:prepend>
+    
+    <template  v-if="this.store.isAuthenticated" v-slot:prepend>
+      {{ this.store.user.username }}
+    </template>
+    <template v-else v-slot:prepend>
       <router-link class="text-decoration-none text-black" :to="{
         name: 'login',
       }">
@@ -26,7 +29,7 @@
         </h4>
       </v-btn>
     </router-link>
-    </template> -->
+    </template>
   </v-app-bar>
 </template>
 
@@ -34,11 +37,17 @@
 import logo from "../assets/logo.png";
 import { useDisplay } from "vuetify";
 
+
+import { useAuth } from "@/store/auth.js";
+
 export default {
   name: "Header",
 
   setup() {
     const { display } = useDisplay();
+    const store = useAuth();
+
+    return { store }
   },
   data() {
     return {

@@ -22,9 +22,13 @@ const vuetify = createVuetify({
 // mdi icons
 import '@mdi/font/css/materialdesignicons.css'
 
+//Pinia
+import { createPinia } from 'pinia'
+const pinia = createPinia()
+
+
 //router
 import router from './router'
-
 
 // axios
 import axios from 'axios'
@@ -33,6 +37,28 @@ import axios from 'axios'
 axios.defaults.baseURL = 'https://schoolupapi.live'
 
 
+
 // Create App
-const app=createApp(App).use(vuetify).use(router)
+const app=createApp(App).use(vuetify).use(pinia).use(router)
 app.mount('#app');
+
+// Check if the user is authenticated when the app is created
+
+import { useAuth } from './store/auth'; // Import the store
+
+const authStore = useAuth(); // Initialize the auth store
+
+// Restore the user from localStorage if available
+const storedUser = localStorage.getItem('user');
+if (storedUser) {
+  authStore.user = JSON.parse(storedUser); // Set user data from localStorage
+}  
+  
+// Global navigation guard here to protect routes
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    next('login'); // Redirect to login page if not authenticated
+  } else {
+    next(); // Proceed to the route
+  }
+});

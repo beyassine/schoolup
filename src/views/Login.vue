@@ -5,8 +5,9 @@
                 <h2 class="text-center mb-2">تسجيل الدخول</h2>
                 <v-row class="d-flex flex-row-reverse mt-5">
                     <v-col cols="12">
-                        <h3 class="mb-3 text-right">البريد الإلكتروني<v-icon class="ml-2">mdi-email-outline</v-icon></h3>
-                        <v-text-field :rules="emailRules" v-model="email" required></v-text-field>                        
+                        <h3 class="mb-3 text-right">البريد الإلكتروني<v-icon class="ml-2">mdi-email-outline</v-icon>
+                        </h3>
+                        <v-text-field :rules="emailRules" v-model="email" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <h3 class="mb-3 text-right">كلمة المرور<v-icon class="ml-2">mdi-lock-outline</v-icon></h3>
@@ -15,39 +16,43 @@
                             @click:prepend-inner="visible1 = !visible1"></v-text-field>
                     </v-col>
                 </v-row>
-                <v-btn :disabled="!valid" :loading="loading" class="mt-5 text-white" color="#ff0090" size="large" elevation="0"
-                    block dark @click="login">
+                <v-btn :disabled="!valid" :loading="loading" class="mt-5 text-white" color="#ff0090" size="large"
+                    elevation="0" block dark @click="login">
                     <h3>تابع</h3>
-                </v-btn>            
+                </v-btn>
+                <h5 v-if="incorrectAuth" class="text-right text-red mt-2">
+                    البريد الإلكتروني أو كلمة المرور خاطئ
+                </h5>
             </v-form>
         </v-card>
     </v-container>
 </template>
 
 <script>
+import { useAuth } from "@/store/auth.js";
 import { useDisplay } from "vuetify";
-import IvsPlayer from '../components/IvsPlayer.vue';
-import VideoJsPlayer from '../components/VideoJsPlayer.vue';
+
 export default {
     name: 'Admin',
 
     setup() {
         const { display } = useDisplay();
+        const store = useAuth();
+
+        return { store }
     },
 
     components: {
-        IvsPlayer,
-        VideoJsPlayer
+
 
     },
 
     data() {
         return {
-            valid:false,
-            fullname:'',
-            email:'',
-            password1:'',
-            password2:'',
+            valid: false,
+            fullname: '',
+            email: '',
+            password1: '',
             visible1: false,
             visible2: false,
             Required: [
@@ -61,13 +66,29 @@ export default {
                 (v) => !!v || "أدخل كلمة المرور",
                 (v) => v == this.password1 || "كلمة المرور غير متطابقة",
             ],
-            loading:false,
+            loading: false,
+            incorrectAuth: false,
         };
     },
     methods: {
-        login(){
-            console.log('ok')
-        }
+        login() {
+            this.loading = true;
+            const fd = {
+                email: this.email,
+                password: this.password1
+            };
+            this.store.loginUser(fd)
+                .then(() => {
+                    this.loading = false;
+                    this.$router.push({
+                        name: "home",
+                    })
+                })
+                .catch((err) => {
+                    this.incorrectAuth = true;
+                    this.loading = false;
+                });
+        },
     }
 
 }

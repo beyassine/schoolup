@@ -8,9 +8,13 @@
   },
   "dependencies": {
     "@mux/mux-player": "^2.7.0",
+    "agora-rtc-sdk-ng": "^4.22.1",
     "amazon-ivs-player": "^1.31.0",
     "axios": "^1.7.3",
     "core-js": "^3.8.3",
+    "dayjs": "^1.11.13",
+    "jwt-decode": "^4.0.0",
+    "pinia": "^2.2.4",
     "video.js": "^8.17.3",
     "vue": "^3.2.13",
     "vue-router": "^4.4.0",

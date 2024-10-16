@@ -4,10 +4,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
-import Player from '../views/Player.vue'
 import Profile from '../views/Profile.vue'
 import Course from '../views/Course.vue'
 import Admin from '../views/Admin.vue'
+import AdminLive from '../views/AdminLive.vue'
 import AdminSubs from '../views/AdminSubs.vue'
 import AdminInfo from '../views/AdminInfo.vue'
 
@@ -31,15 +31,13 @@ const routes = [
       component: Login
     },
     {
-      path: '/player',
-      name: 'Player',
-      component: Player
-    },
-    {
       path: '/profile/:userId',
       name: 'Profile',
       component: Profile,
-      meta: {white: true },
+      meta: {
+        white: true,
+        requiresAuth: false 
+       },
     },
     {
       path: '/courses/:courseId',
@@ -47,9 +45,14 @@ const routes = [
       component: Course
     },
     {
-      path: '/admin',
+      path: '/admin/:userId',
       name: 'Admin',
       component: Admin
+    },
+    {
+      path: '/adminlive/:userId',
+      name: 'AdminLive',
+      component: AdminLive
     },
     {
       path: '/adminsubs',
@@ -68,16 +71,5 @@ const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
   })
-  
-  router.beforeEach((to, from, next) => {
-    if (to.meta.requiresAuth) {
-      if (!store.state.users.isAuthenticated) {
-        next({
-          name: 'login',
-        })
-      }
-    }
-    next()
-  })
-  
+
   export default router

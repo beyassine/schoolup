@@ -10,8 +10,9 @@
                             :rules="Required"></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <h3 class="mb-3 text-right">البريد الإلكتروني<v-icon class="ml-2">mdi-email-outline</v-icon></h3>
-                        <v-text-field :rules="emailRules" v-model="email" required></v-text-field>                        
+                        <h3 class="mb-3 text-right">البريد الإلكتروني<v-icon class="ml-2">mdi-email-outline</v-icon>
+                        </h3>
+                        <v-text-field :rules="emailRules" v-model="email" required></v-text-field>
                     </v-col>
                     <v-col :cols="$vuetify.display.smAndUp ? '6' : '12'">
                         <h3 class="mb-3 text-right">كلمة المرور<v-icon class="ml-2">mdi-lock-outline</v-icon></h3>
@@ -27,10 +28,10 @@
                             @click:prepend-inner="visible2 = !visible2"></v-text-field>
                     </v-col>
                 </v-row>
-                <v-btn :disabled="!valid" :loading="loading" class="mt-5 text-white" color="#ff0090" size="large" elevation="0"
-                    block dark @click="register">
+                <v-btn :disabled="!valid" :loading="loading" class="mt-5 text-white" color="#ff0090" size="large"
+                    elevation="0" block dark @click="register">
                     <h3>تابع</h3>
-                </v-btn>            
+                </v-btn>
             </v-form>
         </v-card>
     </v-container>
@@ -53,11 +54,11 @@ export default {
 
     data() {
         return {
-            valid:false,
-            username:'',
-            email:'',
-            password1:'',
-            password2:'',
+            valid: false,
+            username: '',
+            email: '',
+            password1: '',
+            password2: '',
             visible1: false,
             visible2: false,
             Required: [
@@ -71,34 +72,38 @@ export default {
                 (v) => !!v || "أدخل كلمة المرور",
                 (v) => v == this.password1 || "كلمة المرور غير متطابقة",
             ],
-            loading:false,
+            loading: false,
         };
     },
     methods: {
-        register(){
-            this.loading=true
+        register() {
+            this.loading = true
             const fd = {
-                    username: this.username,
-                    email: this.email,
-                    password: this.password1,
-                    profile_img:'test',
-                }; 
-                axios
-                    .post(`/user/create`, fd)
-                    .then((response) => {
-                        if (response.status == 200) {
-                            this.loading = false;
-                            this.$router.push({
-                                name: "login",
-                            })
-                        }
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
-            
-        }
-    }
+                username: this.username,
+                email: this.email,
+                password: this.password1,
+                profile_img: 'test',
+            };
+            axios
+                .post(`/user/create`, fd)
+                .then((response) => {
+                    if (response.status == 200) {
+                        this.loading = false;
+                        this.$router.push({
+                            name: "login",
+                        })
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+
+        },
+        
+    },
+
+    mounted() {
+    },
 
 
 }
@@ -108,5 +113,12 @@ export default {
     padding-top: 5%;
     padding-left: 15%;
     padding-right: 15%;
+}
+
+#local_stream {
+    width: 100%;
+    height: 480px;
+    transform: scaleX(-1);
+    /* Disable mirroring for local stream */
 }
 </style>
