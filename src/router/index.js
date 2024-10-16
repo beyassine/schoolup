@@ -40,6 +40,15 @@ const routes = [
        },
     },
     {
+      path: '/live/:userId',
+      name: 'Profile',
+      component: Profile,
+      meta: {
+        white: true,
+        requiresAuth: false 
+       },
+    },
+    {
       path: '/courses/:courseId',
       name: 'Course',
       component: Course

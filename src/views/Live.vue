@@ -25,8 +25,8 @@
                 <h2 class="text-center mb-5">دروس مباشرة
                     <v-icon icon="mdi-google-classroom" class="ml-2" size="large"></v-icon>
                 </h2>
-                 <v-card class="mx-auto" elevation="0">
-                    <!--<h3 v-if="isHostLive" class="text-right ma-3">مباشر
+                <v-card class="mx-auto" elevation="0">
+                    <h3 v-if="isHostLive" class="text-right ma-3">مباشر
                         <v-icon icon="mdi-circle" color="red" size=""></v-icon>
                     </h3>
                     <div>
@@ -34,7 +34,7 @@
                         <button v-if="isHostLive && !isJoined" @click="joinLiveStream">Join Live Stream</button>
                         <p v-else>The host is not live right now.</p>
                         <div id="remote_stream" style="width: 800px; height: 360px; background-color: #000;"></div>
-                    </div> -->
+                    </div>
                     <v-card-item>
                         <div><!-- 
                             <div class=" text-right text-pink-lighten-1 mb-5">
