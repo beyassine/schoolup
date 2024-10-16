@@ -5,6 +5,7 @@ import Home from '../views/Home.vue'
 import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
 import Profile from '../views/Profile.vue'
+import Live from '../views/Live.vue'
 import Course from '../views/Course.vue'
 import Admin from '../views/Admin.vue'
 import AdminLive from '../views/AdminLive.vue'
@@ -41,8 +42,8 @@ const routes = [
     },
     {
       path: '/live/:userId',
-      name: 'Profile',
-      component: Profile,
+      name: 'Live',
+      component: Live,
       meta: {
         white: true,
         requiresAuth: false 
