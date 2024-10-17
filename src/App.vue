@@ -1,6 +1,7 @@
 <template>
   <v-app class="app">
     <Header />    
+    <Sidebar  v-if="this.$route.meta.sidebar" />
     <v-main :class="this.$route.meta.white ? 'white' : 'main'">
       <router-view />
     </v-main>
@@ -9,11 +10,13 @@
 
 <script>
 import Header from './components/Header.vue'
+import Sidebar from './components/Sidebar.vue'
 
 export default {
   name: 'App',
   components: {
-    Header
+    Header,
+    Sidebar,
   },
 
   mounted() {
@@ -36,6 +39,4 @@ export default {
 .white {
   background-color: white;
 }
-
-
 </style>

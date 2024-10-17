@@ -21,49 +21,17 @@
             </v-avatar>
         </v-card>
         <v-row class="d-flex mt-3 d-flex flex-row-reverse ">
-            <v-col :cols="$vuetify.display.mdAndUp ? '12' : '12'">
+            <v-col cols="12">
                 <h2 class="text-center mb-5">دروس مباشرة
-                    <v-icon icon="mdi-google-classroom" class="ml-2" size="large"></v-icon>
+                    <v-icon icon="mdi-webcam" class="ml-2" size="large"></v-icon>
                 </h2>
-                 <v-card class="mx-auto" elevation="0">
-                    <!--<h3 v-if="isHostLive" class="text-right ma-3">مباشر
-                        <v-icon icon="mdi-circle" color="red" size=""></v-icon>
-                    </h3>
-                    <div>
-                        <h2 v-if="isHostLive">The host is live!</h2>
-                        <button v-if="isHostLive && !isJoined" @click="joinLiveStream">Join Live Stream</button>
-                        <p v-else>The host is not live right now.</p>
-                        <div id="remote_stream" style="width: 800px; height: 360px; background-color: #000;"></div>
-                    </div> -->
-                    <v-card-item>
-                        <div><!-- 
-                            <div class=" text-right text-pink-lighten-1 mb-5">
-                                <h2 class="font-weight-black "> 100 DH</h2>
-                                <h5 class="">شهري</h5>
-                            </div> -->
-                            <div class="text-right mb-2">
-                                <h4>المادة : الرياضيات -</h4>
-                            </div>
-                            <div class="text-right mb-2">
-                                <h4>المستوى : ثانية باكلوريا -</h4>
-                            </div><!-- 
-                            <div class="text-right mb-2">
-                                <h3>18h00 التوقيت : الإثنين-الخميس -</h3>
-                            </div>
-                            <div class="text-right mb-2">
-                                <h3>1h30 : مدة الحصة -</h3>
-                            </div> -->
-                        </div>
-                    </v-card-item>
-                </v-card>
+                <h4 class="text-center ma-2">لا يوجد بث مباشر الآن</h4>
                 <pinkdivider />
-            </v-col>
-            <v-col :cols="$vuetify.display.mdAndUp ? '6' : '12'">
                 <h2 class="text-center mb-5">دروس مسجلة
                     <v-icon icon="mdi-monitor-account" class="ml-2" size="large"></v-icon>
                 </h2>
                 <v-card v-for="(course, index) in courses" :key="course.id" class="mb-2" :to="{
-                    name: 'Course',
+                    name: 'course',
                     params: { courseId: course.id },
                 }">
                     <v-card-text class="py-0 ma-2">
@@ -222,8 +190,6 @@ export default {
 
     },
     mounted() {
-        // Chek if Live     
-        this.checkLive();
     },
     beforeDestroy() {
     },

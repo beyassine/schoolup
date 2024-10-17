@@ -37,7 +37,7 @@
                 </h2>
                 <v-card class="d-flex justify-center" elevation="0">
                     <router-link :to="{
-                        name: 'AdminLive',
+                        name: 'adminLive',
                         params: { userId: this.userId },
 
                     }">
@@ -56,7 +56,7 @@
                 <div v-for="(courses, year) in groupedCourses" :key="year">
                     <h2>{{ yearTitles[year] || year }}</h2>
                     <v-card v-for="course in courses" :key="course.id" class="mb-2" :to="{
-                        name: 'Course',
+                        name: 'course',
                         params: { courseId: course.id },
                     }">
                         <v-card-text class="py-0 ma-2">

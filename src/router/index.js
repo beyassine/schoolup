@@ -33,7 +33,7 @@ const routes = [
     },
     {
       path: '/profile/:userId',
-      name: 'Profile',
+      name: 'profile',
       component: Profile,
       meta: {
         white: true,
@@ -42,7 +42,7 @@ const routes = [
     },
     {
       path: '/live/:userId',
-      name: 'Live',
+      name: 'live',
       component: Live,
       meta: {
         white: true,
@@ -51,27 +51,31 @@ const routes = [
     },
     {
       path: '/courses/:courseId',
-      name: 'Course',
+      name: 'course',
       component: Course
     },
     {
       path: '/admin/:userId',
-      name: 'Admin',
-      component: Admin
+      name: 'admin',
+      component: Admin,
+      meta: {
+        requiresAuth: true,
+        sidebar:true
+       },
     },
     {
       path: '/adminlive/:userId',
-      name: 'AdminLive',
+      name: 'adminLive',
       component: AdminLive
     },
     {
-      path: '/adminsubs',
-      name: 'AdminSubs',
+      path: '/adminsubs/:userId',
+      name: 'adminSubs',
       component: AdminSubs
     },
     {
-      path: '/admininfo',
-      name: 'AdminInfo',
+      path: '/admininfo/:userId',
+      name: 'adminInfo',
       component: AdminInfo
     },
 ]

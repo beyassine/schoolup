@@ -39,7 +39,7 @@
                         </h5>
                     </v-card-title>
                     <router-link class="text-decoration-none" :to="{
-                        name: 'Profile',
+                        name: 'profile',
                         params: { userId: '5518db98-c5eb-4387-9330-a439bb039efd' },
 
                     }">

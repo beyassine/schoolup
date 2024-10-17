@@ -2,7 +2,7 @@
     <v-container>
         <div class="d-flex justify-space-between mt-2 mb-2" v-if="!loading">
             <router-link class=" text-black" :to="{
-                name: 'Profile',
+                name: 'profile',
                 params: { userId: this.userId },
 
             }">

@@ -32,9 +32,9 @@ import router from './router'
 
 // axios
 import axios from 'axios'
-//https://schoolupapi.live
-//http://127.0.0.1:8000
-axios.defaults.baseURL = 'https://schoolupapi.live'
+var base='https://schoolupapi.live'
+var localbase='http://127.0.0.1:8000'
+axios.defaults.baseURL = base
 
 
 

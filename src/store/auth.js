@@ -17,7 +17,7 @@ export const useAuth = defineStore('auth', {
     }),
     getters: {
 
-        isAuthenticated: (state)=> state.user !== null ,
+        isAuthenticated: (state) => state.user !== null,
     },
     actions: {
         loginUser(usercredentials) {
@@ -28,17 +28,24 @@ export const useAuth = defineStore('auth', {
                 }
                 )
                     .then(response => {
-                        if(response.status==200){
-                            this.user=response.data
+                        if (response.status == 200) {
+                            this.user = response.data
                             localStorage.setItem('accessToken', response.data.access_token);
                             localStorage.setItem('refreshToken', response.data.refresh_token);
-                            localStorage.setItem('user', JSON.stringify({ user_id: response.data.id, username: response.data.username,}))                        
+                            localStorage.setItem('user', JSON.stringify({ user_id: response.data.id, username: response.data.username, }))
                             resolve()
                         }
                     }).catch(err => {
                         reject()
                     })
             })
+        },
+
+        logoutUser() {
+            this.user=null
+            localStorage.removeItem('accessToken')
+            localStorage.removeItem('refreshToken')
+            localStorage.removeItem('user')
         },
 
     }
