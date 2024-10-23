@@ -33,7 +33,7 @@ export default {
 }
 
 .main {
-  background-color: rgb(240, 240, 240);
+  background-color: rgb(251,247,245);
 }
 
 .white {

@@ -21,12 +21,32 @@
             </v-avatar>
         </v-card>
         <v-row class="d-flex mt-3 d-flex flex-row-reverse ">
-            <v-col cols="12">
+            <v-col :cols="$vuetify.display.mdAndUp ? '12' : '12'">
                 <h2 class="text-center mb-5">دروس مباشرة
-                    <v-icon icon="mdi-webcam" class="ml-2" size="large"></v-icon>
+                    <v-icon icon="mdi-cast-education" class="ml-2" size="large"></v-icon>
                 </h2>
-                <h4 class="text-center ma-2">لا يوجد بث مباشر الآن</h4>
+                <v-card class="mx-auto" elevation="0">
+                    <!-- <div class="" v-if="isHostLive && !isJoined">
+                        <v-btn  @click="joinLiveStream" rounded="" color="pink-lighten-1"
+                            size="large" class="text-center ma-5" >
+                            <h4>تابع البث
+                                <v-icon icon="mdi-cast-audio-variant"></v-icon>
+                            </h4>
+                        </v-btn>
+                    </div> -->
+                    <!-- Video.js video player -->
+
+                    <div v-if="!isHostLive && !isJoined">
+                        <h4 class="text-center ma-2">لا يوجد بث مباشر الآن</h4>
+                    </div>
+                    <div class="d-flex justify-center">
+                        <video ref="videoPlayer" id="videoPlayer" class="video-js vjs-default-skin" controls
+                            preload="auto"></video>
+                    </div>
+                </v-card>
                 <pinkdivider />
+            </v-col>
+            <v-col cols="12">
                 <h2 class="text-center mb-5">دروس مسجلة
                     <v-icon icon="mdi-monitor-account" class="ml-2" size="large"></v-icon>
                 </h2>
@@ -54,6 +74,8 @@
 <script>
 import { useDisplay } from "vuetify";
 import axios from "axios";
+import videojs from "video.js";
+import "video.js/dist/video-js.css";
 
 //Agora
 import AgoraRTC from "agora-rtc-sdk-ng";
@@ -86,13 +108,23 @@ export default {
             client: null,
             localTracks: null,
             hostUID: null,
-            uid: 2,
+            uid: Math.floor(1000 + Math.random() * 9000),
             isHostLive: false,
             isJoined: false,
 
         };
     },
     methods: {
+        initVideoPlayer() {
+            if (!this.player) {
+                this.player = videojs(this.$refs.videoPlayer, {
+                    controls: true,
+                    autoplay: true,
+                    preload: "auto",
+                    fluid: true, // Responsive player
+                });
+            }
+        },
         //Agora
         async getToken(channel, uid, role) {
             try {
@@ -134,6 +166,7 @@ export default {
                     this.hostUID = user.uid
                     if (mediaType === 'video') {
                         this.isHostLive = true; // Update the state to show the "Join" button
+                        this.joinLiveStream()
                     }
                 });
 
@@ -147,23 +180,23 @@ export default {
                 console.error("Error joining as audience:", error);
             }
         },
-
         async joinLiveStream() {
             try {
-                if (this.hostUID !== null) {
-                    // Subscribe to the host's video track when the user clicks "Join"
-                    await this.client.subscribe(this.hostUID, "video");
-
-                    const remotePlayerContainer = document.getElementById("remote_stream");
-                    remotePlayerContainer.innerHTML = ''; // Clear any previous stream content
-
-                    // Play the host's video track in the remote_stream div
-                    const hostVideoTrack = this.client.remoteUsers.find(user => user.uid === this.hostUID).videoTrack;
-                    hostVideoTrack.play("remote_stream");
-
-                    this.isJoined = true; // Mark as joined
-                    console.log("Joined live stream.");
+                await this.client.subscribe(this.hostUID, "video");
+                const hostVideoTrack = this.client.remoteUsers.find(user => user.uid === this.hostUID).videoTrack;
+                this.initVideoPlayer();
+                const remotePlayerContainer = this.$refs.videoPlayer;
+                if (!remotePlayerContainer) {
+                    console.error("Element with ID 'remote_stream' not found.");
+                    return;
                 }
+                if (hostVideoTrack) {
+                    hostVideoTrack.play(remotePlayerContainer);
+                } else {
+                    console.error("No video track found for the host.");
+                }
+
+                this.isJoined = true;
             } catch (error) {
                 console.error("Error joining live stream:", error);
             }
@@ -190,6 +223,8 @@ export default {
 
     },
     mounted() {
+        // Chek if Live     
+        this.checkLive();
     },
     beforeDestroy() {
     },
@@ -212,7 +247,15 @@ export default {
     padding-left: 15%;
     padding-right: 15%;
 }
-#remote_stream{
-    transform: scaleX(1); /* Ensure no mirroring for remote stream */
+
+#remote_stream {
+    width: 100%;
+    /* Ensure video takes full width */
+    height: auto;
+    /* Maintain aspect ratio */
+    object-fit: contain;
+    /* Ensures the video is not truncated */
+    transform: scaleX(1);
+    /* Ensure no mirroring for remote stream */
 }
 </style>

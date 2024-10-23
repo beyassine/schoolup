@@ -34,7 +34,7 @@ import router from './router'
 import axios from 'axios'
 var base='https://schoolupapi.live'
 var localbase='http://127.0.0.1:8000'
-axios.defaults.baseURL = base
+axios.defaults.baseURL = localbase
 
 
 

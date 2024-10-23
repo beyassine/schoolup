@@ -66,17 +66,29 @@ const routes = [
     {
       path: '/adminlive/:userId',
       name: 'adminLive',
-      component: AdminLive
+      component: AdminLive,
+      meta: {
+        requiresAuth: true,
+        sidebar:true
+       },
     },
     {
       path: '/adminsubs/:userId',
       name: 'adminSubs',
-      component: AdminSubs
+      component: AdminSubs,
+      meta: {
+        requiresAuth: true,
+        sidebar:true
+       },
     },
     {
       path: '/admininfo/:userId',
       name: 'adminInfo',
-      component: AdminInfo
+      component: AdminInfo,
+      meta: {
+        requiresAuth: true,
+        sidebar:true
+       },
     },
 ]
 

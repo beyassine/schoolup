@@ -1,78 +1,61 @@
 <template>
     <v-container :class="$vuetify.display.smAndUp ? 'container' : ''">
-
-        <div class="d-flex flex-no-wrap justify-center">
-            <v-avatar class="ma-3" :size="$vuetify.display.smAndUp ? '200' : '100'" rounded="0">
-                <v-img :src="profileImg" cover></v-img>
-            </v-avatar>
-        </div>
-        <div class="d-flex flex-no-wrap align-center justify-center">
-            <v-card-title class="text-h5">
-                {{ userName }}
-            </v-card-title>
-        </div>
-        <div class="d-flex flex-no-wrap justify-center justify-center">
-            <router-link class="text-decoration-none" to="admininfo">
-                <v-btn variant="text" color="black" class="ma-2">
-                    <h2>معلومات الحساب</h2>
-                </v-btn>
-            </router-link>
-            <router-link class="text-decoration-none" to="adminsubs">
-                <v-btn variant="text" color="black" class="ma-2">
-                    <h2>المنخرطين</h2>
-                </v-btn>
-            </router-link>
-            <router-link class="text-decoration-none" to="admin">
-                <v-btn variant="text" color="#ff0090" class="ma-2">
-                    <h2>القناة</h2>
-                </v-btn>
-            </router-link>
-        </div>
-        <v-divider class="ma-3"></v-divider>
-        <v-row class="d-flex mt-3">
-
-            <v-col cols="12">
-                <h2 class="text-center mb-5">دروس مباشرة
-                    <v-icon icon="mdi-monitor-account" class="ml-2" size="large"></v-icon>
-                </h2>
-                <v-card class="d-flex justify-center" elevation="0">
-                    <router-link :to="{
-                        name: 'adminLive',
-                        params: { userId: this.userId },
-
-                    }">
-                        <v-btn rounded="" color="pink-lighten-1" size="large" class="text-center ma-5">
-                            <h3>درس مباشر جديد</h3>
-                            <v-icon icon="mdi-plus" class="ml-2" size="large"></v-icon>
-                        </v-btn>
-                    </router-link>
-                </v-card>
-            </v-col>
-
+        <v-row class="d-flex">
             <v-col cols="12">
                 <h2 class="text-center mb-5">دروس مسجلة
                     <v-icon icon="mdi-monitor-account" class="ml-2" size="large"></v-icon>
                 </h2>
-                <div v-for="(courses, year) in groupedCourses" :key="year">
-                    <h2>{{ yearTitles[year] || year }}</h2>
-                    <v-card v-for="course in courses" :key="course.id" class="mb-2" :to="{
-                        name: 'course',
-                        params: { courseId: course.id },
-                    }">
-                        <v-card-text class="py-0 ma-2">
-                            <v-row align="center" no-gutters>
-                                <v-col class="" cols="2">
-                                    <v-icon icon="mdi-chevron-left" color="#ff0090" type="text" size="x-large"></v-icon>
-                                </v-col>
+                <v-divider></v-divider>
+                <v-card class="mt-5 pa-3">
+                    <v-form v-model="valid">
+                        <h2 class="text-center mb-2">أضف درس جديد</h2>
+                        <v-row class="d-flex flex-row-reverse justify-center mt-5">
+                            <v-col :cols="$vuetify.display.smAndUp ? '6' : '12'">
+                                <h3 class="mb-3 text-right">عنوان الدرس<v-icon class="ml-2"></v-icon>
+                                </h3>
+                                <v-text-field v-model="coursename" required></v-text-field>
+                            </v-col>
+                            <v-col :cols="$vuetify.display.smAndUp ? '6' : '12'">
+                                <h3 class="mb-3 text-right">المستوى الدراسي<v-icon class="ml-2"></v-icon>
+                                </h3>
+                                <v-select :items="schoolYears" item-title="text" item-value="value"
+                                    v-model="school_year" required></v-select>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-btn :disabled="!valid" :loading="loading" rounded="" color="pink-lighten-1" size="large"
+                                    class="text-center mb-2 " block @click="createCourse()">
+                                    <h4>أضف</h4>
+                                    <v-icon icon="mdi-plus" class="ml-2" size="large"></v-icon>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-form>
+                </v-card>
+                <v-card class="mt-5 pa-3">
+                    <h2 class="text-center mb-2">قائمة الدروس</h2>
+                    <div v-for="(courses, year) in groupedCourses" :key="year">
+                        <h3 class="text-right ma-5">{{ yearTitles[year] || year }}
+                            <v-icon icon="mdi-chevron-left" class="ml-2" size="large"></v-icon>
+                        </h3>
+                        <v-card v-for="course in courses" :key="course.id" class="mb-2" :to="{
+                            name: 'course',
+                            params: { courseId: course.id },
+                        }">
+                            <v-card-text class="py-0 ma-2">
+                                <v-row align="center" no-gutters>
+                                    <v-col class="" cols="2">
+                                        <v-icon icon="mdi-chevron-left" color="#ff0090" type="text"
+                                            size="x-large"></v-icon>
+                                    </v-col>
 
-                                <v-col cols="10" class=" text-h6 text-right">
-                                    {{ course.coursename }}
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
-                    </v-card>
-                    <v-divider></v-divider>
-                </div>
+                                    <v-col cols="10" class=" text-h6 text-right">
+                                        {{ course.coursename }}
+                                    </v-col>
+                                </v-row>
+                            </v-card-text>
+                        </v-card>
+                    </div>
+                </v-card>
             </v-col>
         </v-row>
     </v-container>
@@ -82,6 +65,7 @@
 import { useDisplay } from "vuetify";
 import axios from "axios";
 
+import pinkdivider from '../components/pinkdivider.vue'
 
 export default {
     name: 'Admin',
@@ -91,27 +75,38 @@ export default {
     },
 
     components: {
+        pinkdivider
     },
 
     data() {
         return {
             userId: this.$route.params.userId,
-            userName: '',
-            teacherDescription: '',
-            profileImg: '',
             courses: '',
+            //form
+            valid: false,
+            loading:false,
+            coursename: '',
+            school_year: '',
+            schoolYears: [
+                { value: 'c1', text: "السنة أولى إعدادي" },
+                { value: 'c2', text: "السنة ثانية إعدادي" },
+                { value: 'c3', text: "السنة ثالثة إعدادي" },
+                { value: 'l1', text: "السنة أولى ثانوي" },
+                { value: 'l2', text: "السنة أولى باكلوريا" },
+                { value: 'l3', text: "السنة ثانية باكلوريا" },
+            ]
         };
     },
     computed: {
         // Mapping school_year codes to titles
         yearTitles() {
             return {
-                c1: "1ère année collège",
-                c2: "2ème année collège",
-                c3: "3ème année collège",
-                l1: "1ère année lycée",
-                l2: "2ème année lycée",
-                l3: "3ème année lycée",
+                c1: "السنة أولى إعدادي",
+                c2: "السنة ثانية إعدادي",
+                c3: "السنة ثالثة إعدادي",
+                l1: "السنة أولى ثانوي",
+                l2: "السنة أولى باكلوريا",
+                l3: "السنة ثانية باكلوريا",
             };
         },
         // Grouping courses by school_year
@@ -125,17 +120,13 @@ export default {
                     }
                     grouped[course.school_year].push(course);
                 });
-                console.log(grouped)
                 return grouped;
 
             }
         },
     },
     methods: {
-
-
-    },
-    created() {
+        getCourses(){
         axios
             .get(`/user/get/${this.userId}`)
             .then((response) => {
@@ -144,6 +135,31 @@ export default {
                 this.courses = response.data.courses
             })
             .catch((err) => { });
+
+        },
+        createCourse() {
+            this.loading = true
+            const fd = {
+                user_id: this.userId,
+                coursename: this.coursename,
+                description:'',
+                coursethumbnail:'',
+                author:'',
+                school_year: this.school_year,
+            }
+
+            axios.post(`/course/create`, fd).then((response) => {
+                if (response.status === 200) {
+                    this.getCourses()
+                    this.loading=false
+                }
+            });
+        }
+
+
+    },
+    created() {
+        this.getCourses()
     }
 
 
