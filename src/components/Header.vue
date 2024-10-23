@@ -11,7 +11,7 @@
     <template  v-if="this.store.isAuthenticated" v-slot:prepend>
       {{ this.store.user.username }}
     </template>
-    <template v-else v-slot:prepend>
+    <!-- <template v-else v-slot:prepend>
       <router-link class="text-decoration-none text-black" :to="{
         name: 'login',
       }">
@@ -29,7 +29,7 @@
         </h4>
       </v-btn>
     </router-link>
-    </template>
+    </template> -->
   </v-app-bar>
 </template>
 
