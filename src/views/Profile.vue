@@ -39,9 +39,21 @@
                     <div v-if="!isHostLive && !isJoined">
                         <h4 class="text-center ma-2">لا يوجد بث مباشر الآن</h4>
                     </div>
+                    <div v-if="isHostLive && !isJoined">
+                        <h4 class="text-center ma-2"> بث مباشر الآن</h4>
+                        <v-btn @click="joinLiveStream" rounded="" color="pink-lighten-1" size="large"
+                            class="text-center ma-5">
+                            <h4>تابع البث
+                                <v-icon icon="mdi-cast-audio-variant"></v-icon>
+                            </h4>
+                        </v-btn>
+
+                    </div>
+
                     <div class="d-flex justify-center">
                         <video ref="videoPlayer" id="videoPlayer" class="video-js vjs-default-skin" controls
-                        defaultMuted   preload="auto"></video>
+                            defaultMuted preload="auto" loop="loop" muted playsinline
+                            oncontextmenu="return false;"></video>
                     </div>
                 </v-card>
                 <pinkdivider />
