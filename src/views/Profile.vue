@@ -41,7 +41,7 @@
                     </div>
                     <div class="d-flex justify-center">
                         <video ref="videoPlayer" id="videoPlayer" class="video-js vjs-default-skin" controls
-                            preload="auto"></video>
+                        defaultMuted   preload="auto"></video>
                     </div>
                 </v-card>
                 <pinkdivider />
