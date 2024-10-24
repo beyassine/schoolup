@@ -21,7 +21,7 @@
             </v-avatar>
         </v-card>
         <v-row class="d-flex mt-3 d-flex flex-row-reverse ">
-            <v-col :cols="$vuetify.display.mdAndUp ? '12' : '12'">
+            <v-col cols="12">
                 <h2 class="text-center mb-5">دروس مباشرة
                     <v-icon icon="mdi-cast-education" class="ml-2" size="large"></v-icon>
                 </h2>
@@ -39,9 +39,21 @@
                     <div v-if="!isHostLive && !isJoined">
                         <h4 class="text-center ma-2">لا يوجد بث مباشر الآن</h4>
                     </div>
+                    <div class="d-flex justify-center align-center" v-if="isHostLive && !isJoined">
+                        <v-btn @click="joinLiveStream" rounded="" color="pink-lighten-1" size="large"
+                            class="text-center ma-5 ">
+                            <h4>شاهد البث
+                                <v-icon icon="mdi-cast-audio-variant"></v-icon>
+                            </h4>
+                        </v-btn>
+                        <h4 class="text-center ma-2"> بث مباشر 
+                            <v-icon icon="mdi-circle" color="red"></v-icon>
+                        </h4>
+                    </div>
+
                     <div class="d-flex justify-center">
                         <video ref="videoPlayer" id="videoPlayer" class="video-js vjs-default-skin" controls
-                            preload="auto"></video>
+                            defaultMuted preload="auto"></video>
                     </div>
                 </v-card>
                 <pinkdivider />
@@ -166,7 +178,6 @@ export default {
                     this.hostUID = user.uid
                     if (mediaType === 'video') {
                         this.isHostLive = true; // Update the state to show the "Join" button
-                        this.joinLiveStream()
                     }
                 });
 
