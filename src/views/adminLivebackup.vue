@@ -34,7 +34,6 @@ import { markRaw } from "vue";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 
-
 export default {
     name: "Admin",
     data() {
@@ -110,17 +109,6 @@ export default {
                 this.localTracks[0].play(videoElement); // Audio track
 
                 await this.client.publish(this.localTracks);
-
-
-                // Step 5: Start recording using the backend
-                const startRecordingResponse = await axios.post('http://localhost:3000/api/start-recording', {
-                    channelName: this.channel,
-                    uid: this.uid,
-                    resourceId: "gVO8AjVSddkf8DQtZGdWaQa428tuZcA-yUxAJ-fQ3TF8aqLzBX0M6QNU_BO-z6pIZ_k78J_Lv8PnZNmTOFKAOSvuZSbHscqMBqSlXkMkCMqekXuXt_kuozcK019zGEIVZuF82Gd4HK5BvVf2UV2ohvjPOgh6UUOUn_A29gckZHWtfy5kXJByXHHYz-c3zLHa",
-                });
-
-                console.log("Recording started:", startRecordingResponse.data);
-
                 this.loading = false;
                 this.isStreaming = true;
                 console.log("Host is broadcasting");
@@ -227,7 +215,7 @@ export default {
                 console.error("Error stopping screen sharing:", error);
             }
         },
-
+        
     },
     created() {
     },
@@ -237,4 +225,5 @@ export default {
 .mirror {
     transform: scaleX(-1);
 }
+
 </style>

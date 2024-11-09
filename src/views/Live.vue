@@ -1,24 +1,7 @@
 <template>
     <v-container :class="$vuetify.display.smAndUp ? 'container' : ''">
         <v-card class="d-flex flex-no-wrap justify-end" elevation="0" color="grey-lighten-4">
-            <div class="text-right" color="grey">
-                <v-card-title>
-                    <h4> {{ userName }}</h4>
-                </v-card-title>
-                <v-card-title class="">
-                    <h5>: المستويات</h5>
-                    <h5>سلك الثانوي<v-icon icon="mdi-check" color="green-lighten-1" type="text" size="large"></v-icon>
-                    </h5>
-                </v-card-title>
-                <v-card-title class="">
-                    <h5>: المواد</h5>
-                    <h5>الرياضيات<v-icon icon="mdi-check" color="green-lighten-1" type="text" size="large"></v-icon>
-                    </h5>
-                </v-card-title>
-            </div>
-            <v-avatar class="ma-3" :size="$vuetify.display.smAndUp ? '200' : '100'" rounded="0">
-                <v-img :src="profileImg" cover></v-img>
-            </v-avatar>
+            <!-- UI for the profile -->
         </v-card>
         <v-row class="d-flex mt-3 d-flex flex-row-reverse ">
             <v-col cols="12">
@@ -26,19 +9,6 @@
                     <v-icon icon="mdi-cast-education" class="ml-2" size="large"></v-icon>
                 </h2>
                 <v-card class="mx-auto" elevation="0">
-                    <!-- <div class="" v-if="isHostLive && !isJoined">
-                        <v-btn  @click="joinLiveStream" rounded="" color="pink-lighten-1"
-                            size="large" class="text-center ma-5" >
-                            <h4>تابع البث
-                                <v-icon icon="mdi-cast-audio-variant"></v-icon>
-                            </h4>
-                        </v-btn>
-                    </div> -->
-                    <!-- Video.js video player -->
-
-                    <div v-if="!isHostLive && !isJoined">
-                        <h4 class="text-center ma-2">لا يوجد بث مباشر الآن</h4>
-                    </div>
                     <div class="d-flex justify-center align-center" v-if="isHostLive && !isJoined">
                         <v-btn @click="joinLiveStream" rounded="" color="pink-lighten-1" size="large"
                             class="text-center ma-5 ">
@@ -46,95 +16,74 @@
                                 <v-icon icon="mdi-cast-audio-variant"></v-icon>
                             </h4>
                         </v-btn>
-                        <h4 class="text-center ma-2"> بث مباشر 
+                        <h4 class="text-center ma-2"> بث مباشر
                             <v-icon icon="mdi-circle" color="red"></v-icon>
                         </h4>
                     </div>
 
                     <div class="d-flex justify-center">
-                        <video ref="videoPlayer" id="videoPlayer" class="video-js vjs-default-skin" controls
-                            defaultMuted preload="auto"></video>
+                        <mux-player id="videoPlayer" :playback-id="muxPlaybackId"
+                            metadata-video-title="Live Stream" metadata-viewer-user-id="user-id-007" autoplay>
+                        </mux-player>
                     </div>
                 </v-card>
                 <pinkdivider />
             </v-col>
-            <v-col cols="12">
-                <h2 class="text-center mb-5">دروس مسجلة
-                    <v-icon icon="mdi-monitor-account" class="ml-2" size="large"></v-icon>
-                </h2>
-                <v-card v-for="(course, index) in courses" :key="course.id" class="mb-2" :to="{
-                    name: 'course',
-                    params: { courseId: course.id },
-                }">
-                    <v-card-text class="py-0 ma-2">
-                        <v-row align="center" no-gutters>
-                            <v-col class="" cols="2">
-                                <v-icon icon="mdi-chevron-left" color="#ff0090" type="text" size="x-large"></v-icon>
-                            </v-col>
-
-                            <v-col cols="10" class=" text-h6 text-right">
-                                {{ course.coursename }}
-                            </v-col>
-                        </v-row>
-                    </v-card-text>
-                </v-card>
-            </v-col>
+            <!-- Other sections like recorded lessons -->
         </v-row>
     </v-container>
 </template>
-
 <script>
-import { useDisplay } from "vuetify";
 import axios from "axios";
 import videojs from "video.js";
-import "video.js/dist/video-js.css";
-
-//Agora
 import AgoraRTC from "agora-rtc-sdk-ng";
-import { markRaw } from 'vue';
-
+import { markRaw } from "vue";
+import "video.js/dist/video-js.css";
 import pinkdivider from '../components/pinkdivider.vue'
 
 export default {
     name: 'Profile',
-
-    setup() {
-        const { display } = useDisplay();
-    },
-
-    components: {
-        pinkdivider
-    },
-
+    components: { pinkdivider },
     data() {
         return {
             userId: this.$route.params.userId,
             userName: '',
-            teacherDescription: '',
             profileImg: '',
             courses: '',
-            //Agora
-            appId: "e11d8e22b6544ff7ba5a917d9b5396e8", // Replace with your Agora App ID
-            token: "", // You can generate tokens from your FastAPI backend (optional for simple testing)
+            appId: "YOUR_AGORA_APP_ID", // Replace with your Agora App ID
+            token: "",
             channel: "test", // Channel name for your live stream
             client: null,
-            localTracks: null,
             hostUID: null,
             uid: Math.floor(1000 + Math.random() * 9000),
             isHostLive: false,
             isJoined: false,
-
+            muxPlaybackUrl: "", // Store the Mux HLS URL
+            muxStreamKey: "", // Store Mux Stream Key
+            muxRTMPUrl: "", // Store Mux RTMP URL
+            muxPlaybackId: "",
         };
     },
     methods: {
-        initVideoPlayer() {
+        initMuxPlayer(playbackUrl) {
             if (!this.player) {
-                this.player = videojs(this.$refs.videoPlayer, {
+                this.player = videojs(this.$refs.muxPlayer, {
                     controls: true,
                     autoplay: true,
                     preload: "auto",
-                    fluid: true, // Responsive player
+                    fluid: true,
                 });
+
+                if (videojs.getTech('Html5').isSupported()) {
+                    this.player.src({
+                        src: playbackUrl, // The Mux HLS playback URL
+                        type: 'application/x-mpegURL',
+                    });
+                } else {
+                    const hls = new Hls();
+                    hls.loadSource(playbackUrl);
+                    hls.attachMedia(this.$refs.muxPlayer);
+                }
             }
         },
         //Agora
@@ -156,117 +105,125 @@ export default {
             // Initialize Agora client and make it non-reactive
             this.client = markRaw(AgoraRTC.createClient({ mode: "live", codec: "vp8" }));
         },
-
-        async checkLive() {
+        async getMuxStream() {
             try {
-                // Initialize the Agora client
+                // Call your backend to create Mux live stream
+                const response = await axios.post("https://agora-server-ten.vercel.app/api/create-mux-stream");
+                const { playback_url, stream_key, rtmp_url } = response.data;
+                this.muxPlaybackUrl = response.data.playback_url;
+                this.muxStreamKey = response.data.stream_key;
+                this.muxRTMPUrl = response.data.rtmp_url;
+
+                return { playback_url, stream_key, rtmp_url };
+            } catch (error) {
+                console.error("Error fetching Mux stream:", error);
+                throw error;
+            }
+        },
+        async pushAgoraToMux() {
+            try {
+                // Initialize Agora client
+                this.client = markRaw(AgoraRTC.createClient({ mode: "live", codec: "vp8" }));
+                // Join the Agora channel
+                const auid = Math.floor(1000 + Math.random() * 9000)
+                const tokenResponse = await this.getToken(this.channel, auid, "host");
+                var atoken = tokenResponse;
+
+                await this.client.join(this.appId, this.channel, atoken, auid);
+
+                // Get local video and audio tracks
+                const localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+                const localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+
+                // Publish local tracks
+                await this.client.publish([localVideoTrack, localAudioTrack]);
+
+                // Push Agora stream to Mux RTMP URL
+                await this.client.startLiveStreaming(this.muxRTMPUrl, this.muxStreamKey, {
+                    videoTrack: localVideoTrack,
+                    audioTrack: localAudioTrack,
+                });
+
+                console.log("Agora stream is being pushed to Mux");
+
+            } catch (error) {
+                console.error("Error pushing Agora stream to Mux:", error);
+            }
+        },
+        async joinLiveStream() {
+            try {
+                // Initialize Agora client and set role as 'audience' (viewer)
                 this.initializeRTCClient();
+                // Join the Agora channel
+                const auid = Math.floor(1000 + Math.random() * 9000)
+                const tokenResponse = await this.getToken(this.channel, auid, "host");
+                var atoken = tokenResponse;
 
-                // Get token from backend
-                const tokenResponse = await this.getToken(this.channel, this.uid, 'host');
-                this.token = tokenResponse;
+                await this.client.join(this.appId, this.channel, atoken, auid);
 
-                // Set the audience role (this will only work if the client is initialized properly)
-                await this.client.setClientRole("audience");
+                // Subscribe to the host's video stream
+                this.client.on("user-published", async (user, mediaType) => {
+                    await this.client.subscribe(user, mediaType);
 
-                // Join the channel with the token
-                await this.client.join(this.appId, this.channel, this.token, this.uid);
+                    if (mediaType === "video") {
+                        const remoteStream = user.videoTrack;
 
-
-                // Listen for the stream being added (i.e., host starts streaming)
-                this.client.on('user-published', (user, mediaType) => {
-                    this.hostUID = user.uid
-                    if (mediaType === 'video') {
-                        this.isHostLive = true; // Update the state to show the "Join" button
+                        // Push this stream to Mux for HLS playback
+                        await this.pushStreamToMux(remoteStream);
                     }
                 });
 
-                // Listen for the stream being removed (i.e., host stops streaming)
-                this.client.on('user-unpublished', (user, mediaType) => {
-                    if (mediaType === 'video') {
-                        this.isHostLive = false; // Hide the "Join" button
+                this.isJoined = true;
+            } catch (error) {
+                console.error("Error joining stream as audience:", error);
+            }
+        },
+
+        async pushStreamToMux(remoteStream) {
+            try {
+
+                const response = await axios.post("http://localhost:3000/api/create-mux-stream");
+                // Assume you've already created a Mux live stream and have RTMP URL and stream key
+                const rtmpUrl = `rtmps://global-live.mux.com:443/app`; // Replace with actual Mux RTMP URL
+                const streamKey = response.data.stream_key; // Replace with actual stream key
+                this.muxPlaybackId = response.data.playbackId
+
+                // Push the Agora stream to Mux using RTMP
+                remoteStream.publish(rtmpUrl, {
+                     streamKey: streamKey,
+                 });
+
+                console.log("Successfully pushed Agora stream to Mux");
+            } catch (error) {
+                console.error("Error pushing Agora stream to Mux:", error);
+            }
+        },
+        async checkLive() {
+            try {
+                // Initialize Agora and check if host is live
+                this.initializeRTCClient();
+                const tokenResponse = await this.getToken(this.channel, this.uid, "host");
+                this.token = tokenResponse;
+                await this.client.join(this.appId, this.channel, this.token, this.uid);
+
+                this.client.on("user-published", (user, mediaType) => {
+                    if (mediaType === "video") {
+                        this.isHostLive = true;
+                    }
+                });
+
+                this.client.on("user-unpublished", (user, mediaType) => {
+                    if (mediaType === "video") {
+                        this.isHostLive = false;
                     }
                 });
             } catch (error) {
                 console.error("Error joining as audience:", error);
             }
         },
-        async joinLiveStream() {
-            try {
-                await this.client.subscribe(this.hostUID, "video");
-                const hostVideoTrack = this.client.remoteUsers.find(user => user.uid === this.hostUID).videoTrack;
-                this.initVideoPlayer();
-                const remotePlayerContainer = this.$refs.videoPlayer;
-                if (!remotePlayerContainer) {
-                    console.error("Element with ID 'remote_stream' not found.");
-                    return;
-                }
-                if (hostVideoTrack) {
-                    hostVideoTrack.play(remotePlayerContainer);
-                } else {
-                    console.error("No video track found for the host.");
-                }
-
-                this.isJoined = true;
-            } catch (error) {
-                console.error("Error joining live stream:", error);
-            }
-        },
-
-        // Clean up when leaving the channel
-        async leaveChannel() {
-            try {
-                // Unpublish local tracks
-                await this.client.unpublish([this.localTracks.videoTrack, this.localTracks.audioTrack]);
-
-                // Stop the local tracks
-                this.localTracks.videoTrack.close();
-                this.localTracks.audioTrack.close();
-
-                // Leave the channel
-                await this.client.leave();
-
-                console.log("Host has left the channel");
-            } catch (error) {
-                console.error("Error leaving the channel:", error);
-            }
-        },
-
     },
     mounted() {
-        // Chek if Live     
         this.checkLive();
     },
-    beforeDestroy() {
-    },
-    created() {
-        axios
-            .get(`/user/get/${this.userId}`)
-            .then((response) => {
-                this.userName = response.data.username
-                this.profileImg = response.data.profile_img
-                this.courses = response.data.courses
-            })
-            .catch((err) => { });
-    }
-
-}
+};
 </script>
-
-<style>
-.container {
-    padding-left: 15%;
-    padding-right: 15%;
-}
-
-#remote_stream {
-    width: 100%;
-    /* Ensure video takes full width */
-    height: auto;
-    /* Maintain aspect ratio */
-    object-fit: contain;
-    /* Ensures the video is not truncated */
-    transform: scaleX(1);
-    /* Ensure no mirroring for remote stream */
-}
-</style>

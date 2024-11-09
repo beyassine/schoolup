@@ -14,46 +14,7 @@
             </v-col>
         </v-row>
     </div>    
-    <div class="d-flex justify-center mb-5">
-        <v-img :src="spinkstar" height="60"></v-img>
-    </div>
-    <div class=" text-center text-h4 font-weight-black mt-5">
-        أساتذتنا 
-    </div>
-    <v-row class="d-flex flex-row-reverse justify-center mt-2 mb-5">
-        <v-col class="d-flex justify-center" :cols="$vuetify.display.mdAndUp ? '4' : '12'">
-            <v-card class="d-flex flex-no-wrap justify-end fill-height mt-3" :width="$vuetify.display.smAndUp ? '500':''" >
-                <div class="text-right">
-                    <v-card-title>
-                        <h4>Saifeddine Brouzi</h4>
-                    </v-card-title>
-                    <v-card-title class="">
-                        <h5>: المستويات</h5>
-                        <h5>سلك الثانوي<v-icon icon="mdi-check" color="green-lighten-1" type="text"
-                                size="large"></v-icon>
-                        </h5>
-                    </v-card-title>
-                    <v-card-title class="">
-                        <h5 class="font-weight-bold">: المواد</h5>
-                        <h5>الرياضيات<v-icon icon="mdi-check" color="green-lighten-1" type="text" size="large"></v-icon>
-                        </h5>
-                    </v-card-title>
-                    <router-link class="text-decoration-none" :to="{
-                        name: 'profile',
-                        params: { userId: '5518db98-c5eb-4387-9330-a439bb039efd' },
-
-                    }">
-                        <v-btn rounded="" color="pink-lighten-1" size="large" class="text-center ma-5" block>
-                            <h4>صفحة الأستاذ</h4>
-                        </v-btn>
-                    </router-link>
-                </div>
-                <v-avatar class="ma-2" :size="$vuetify.display.smAndUp ? '120' : '100'" rounded="0">
-                    <v-img src="https://matjariimages.s3.amazonaws.com/saif.jpg" cover></v-img>
-                </v-avatar>
-            </v-card>
-        </v-col>
-    </v-row>
+    
 </template>
 
 <script>
